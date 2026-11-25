@@ -8,13 +8,7 @@ const assigneeInput = document.querySelector("#assignee");
 const memberHint = document.querySelector("#member-hint");
 const taskPreviewDialog = document.querySelector("#task-preview-dialog");
 const assignTaskButton = document.querySelector("#assign-task-button");
-const teamMembers = {
-  Design: ["Ishita Verma", "Ananya Singh"],
-  Marketing: ["Ananya Singh", "Aarav Sharma"],
-  Organising: ["Aarav Sharma", "Rohan Kapoor"],
-  Technical: ["Rohan Kapoor", "Aarav Sharma"],
-  Management: ["Aarav Sharma", "Ishita Verma"],
-};
+let teamMembers = [];
 
 function showTaskFeedback(message, isError = false) {
   formFeedback.textContent = message;
@@ -59,15 +53,15 @@ function localDateString(date) {
 }
 
 function updateTeamMembers() {
-  const members = teamMembers[teamInput.value] || [];
-  assigneeInput.replaceChildren(new Option(members.length ? "Select a team member" : "Select a team first", ""));
+  const members = teamInput.value ? teamMembers : [];
+  assigneeInput.replaceChildren(new Option(members.length ? "Select a workspace member" : "Select a team first", ""));
   assigneeInput.disabled = members.length === 0;
   assigneeInput.required = true;
   memberHint.textContent = members.length
-    ? "Choose a member from the selected team."
-    : "Choose a team to see its members.";
+    ? "Choose a member from your workspace."
+    : "Choose a team and make sure your workspace has members.";
   for (const member of members) {
-    assigneeInput.add(new Option(member, member));
+    assigneeInput.add(new Option(member.name, member.id));
   }
 }
 
@@ -77,9 +71,11 @@ function formattedDate(value) {
 }
 
 function showTaskPreview(task) {
+  const member = teamMembers.find((item) => item.id === task.assignee);
+  const team = [...teamInput.options].find((item) => item.value === task.team);
   document.querySelector("#preview-task-title").textContent = task.title;
-  document.querySelector("#preview-team").textContent = task.team;
-  document.querySelector("#preview-assignee").textContent = task.assignee;
+  document.querySelector("#preview-team").textContent = team ? team.textContent : task.team;
+  document.querySelector("#preview-assignee").textContent = member ? member.name : task.assignee;
   document.querySelector("#preview-points").textContent = `${task.contributionPoints} pts`;
   document.querySelector("#preview-project").textContent = task.project || "No project";
   document.querySelector("#preview-deadline").textContent = formattedDate(task.dueDate);
@@ -153,10 +149,23 @@ taskForm.addEventListener("reset", () => {
 });
 
 getSession()
-  .then((user) => {
-    if (user) {
-      setUserDetails(user);
-    }
+  .then(async (user) => {
+    if (!user) return;
+    setUserDetails(user);
+    const [membersResponse, teamsResponse] = await Promise.all([
+      fetch("/api/organizations/members", { credentials: "same-origin" }),
+      fetch("/api/teams", { credentials: "same-origin" }),
+    ]);
+    const [membersResult, teamsResult] = await Promise.all([
+      membersResponse.json(),
+      teamsResponse.json(),
+    ]);
+    if (!membersResponse.ok) throw new Error(membersResult.error || "Could not load workspace members.");
+    if (!teamsResponse.ok) throw new Error(teamsResult.error || "Could not load workspace teams.");
+    teamInput.replaceChildren(new Option("Select a team", ""));
+    teamsResult.teams.forEach((team) => teamInput.add(new Option(team.name, team.id)));
+    teamMembers = membersResult.members;
+    updateTeamMembers();
   })
   .catch((error) => {
     showTaskFeedback(error instanceof Error ? error.message : "Could not verify your session.", true);

@@ -301,6 +301,24 @@ textarea:focus-visible {
   gap: 12px;
 }
 
+.team-select-control {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.team-select-control select {
+  max-width: 180px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 8px 10px;
+  background: #fff;
+  color: var(--ink);
+}
+
 .live-pill {
   display: inline-flex;
   align-items: center;
@@ -548,6 +566,21 @@ textarea:focus-visible {
   align-items: center;
   gap: 8px;
   min-width: 0;
+}
+
+button.event-row {
+  width: 100%;
+  border: 1px solid transparent;
+  padding: 4px;
+  border-radius: 9px;
+  background: transparent;
+  text-align: left;
+}
+
+button.event-row:hover,
+button.event-row.is-selected {
+  border-color: var(--border);
+  background: var(--sage-pale);
 }
 
 .event-date {

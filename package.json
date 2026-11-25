@@ -4,7 +4,8 @@
   "description": "TeamFlow CE-1 static prototype",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

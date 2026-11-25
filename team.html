@@ -35,6 +35,9 @@
         <a class="active" href="team.html" aria-current="page">Teams</a>
         <a href="create-task.html">Create Task</a>
         <a href="approvals.html">Approvals</a>
+        <a href="events.html">Events</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="workspace.html">Workspace</a>
       </nav>
       <div class="sidebar-footer">
         <a href="#">Profile</a>
@@ -49,7 +52,7 @@
         <div>
           <p class="breadcrumb">
             Dashboard <span>/</span> Teams <span>/</span>
-            <strong id="breadcrumbTeam">Team Orbit</strong>
+            <strong id="breadcrumbTeam">Loading…</strong>
           </p>
           <p class="eyebrow">TEAM WORKSPACE</p>
         </div>
@@ -58,9 +61,12 @@
           <span class="live-pill">
             <span class="live-dot"></span> Workspace active
           </span>
+          <label class="team-select-control" for="teamSelect">Team
+            <select id="teamSelect" aria-label="Select a team"></select>
+          </label>
 
           <button class="btn btn-primary" id="createTeamBtn" type="button">
-            + Create Team
+            Manage Teams
           </button>
         </div>
       </header>
@@ -68,13 +74,13 @@
       <section class="team-heading">
         <div>
           <p class="eyebrow">YOUR TEAM, YOUR ORBIT</p>
-          <h1 id="teamName">Team Orbit<span>.</span></h1>
+          <h1 id="teamName">Loading team…</h1>
           <p class="team-description" id="teamDescription">
-            One team. Shared goals. Work that moves forward.
+            Workspace team details and task progress.
           </p>
           <div class="team-meta">
-            <span>♧ <span id="headName">Aarav Sharma</span> · Team Head</span>
-            <span>◷ Updated <span id="lastUpdated">just now</span></span>
+            <span>♧ <span id="headName">No members assigned</span></span>
+            <span>◷ Updated <span id="lastUpdated">—</span></span>
           </div>
         </div>
 
@@ -91,21 +97,21 @@
         <article class="summary-box">
           <div class="summary-icon sage-icon">♧</div>
           <p>Total members</p>
-          <strong id="totalMembers">04</strong>
+          <strong id="totalMembers">0</strong>
           <small>People in your orbit</small>
         </article>
 
         <article class="summary-box">
           <div class="summary-icon blue-icon">◉</div>
           <p>Active members</p>
-          <strong id="activeMembers">04</strong>
+          <strong id="activeMembers">0</strong>
           <small>Currently contributing</small>
         </article>
 
         <article class="summary-box">
           <div class="summary-icon peach-icon">✓</div>
           <p>Active tasks</p>
-          <strong id="activeTasks">05</strong>
+          <strong id="activeTasks">0</strong>
           <small>Work in progress</small>
         </article>
 
@@ -129,13 +135,13 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">THE PEOPLE BEHIND THE PROGRESS</p>
-              <h2>Team Members <span class="count-pill" id="memberCount">05</span></h2>
+              <h2>Team Members <span class="count-pill" id="memberCount">0</span></h2>
             </div>
 
             <select id="memberSort" aria-label="Sort team members">
               <option value="name">Name A–Z</option>
               <option value="progress">Highest progress</option>
-              <option value="activity">Most recently active</option>
+              <option value="activity">Most assigned tasks</option>
             </select>
           </div>
 
@@ -196,16 +202,16 @@
         <div class="task-toolbar panel">
           <div class="filter-tabs" id="statusFilters">
             <button class="filter-tab selected" data-status="all" type="button">
-              All <span id="allTaskCount">06</span>
+              All <span id="allTaskCount">0</span>
             </button>
-            <button class="filter-tab" data-status="In progress" type="button">
+            <button class="filter-tab" data-status="In Progress" type="button">
               In progress
             </button>
-            <button class="filter-tab" data-status="To do" type="button">
-              To do
+            <button class="filter-tab" data-status="Assigned" type="button">
+              Assigned
             </button>
-            <button class="filter-tab" data-status="In review" type="button">
-              In review
+            <button class="filter-tab" data-status="Pending review" type="button">
+              Pending review
             </button>
             <button class="filter-tab" data-status="Completed" type="button">
               Completed
@@ -312,7 +318,7 @@
       <label>
         Description
         <textarea name="description" rows="3"
-                  placeholder="What needs to be done?"></textarea>
+                  placeholder="What needs to be done?" required></textarea>
       </label>
 
       <div class="form-row">
@@ -324,6 +330,7 @@
         <label>
           Priority
           <select name="priority">
+            <option value="Urgent">Urgent</option>
             <option value="High">High</option>
             <option value="Medium" selected>Medium</option>
             <option value="Low">Low</option>
@@ -334,18 +341,18 @@
       <div class="form-row">
         <label>
           Deadline
-          <input name="deadline" id="taskDeadline" type="date" required>
+          <input name="dueDate" id="taskDeadline" type="date" required>
         </label>
 
         <label>
-          Initial progress (%)
-          <input name="progress" type="number" min="0" max="100" value="0">
+          Project
+          <input name="project" maxlength="100" placeholder="Optional">
         </label>
       </div>
 
       <label>
         Contribution points for completing this task
-        <input name="points" type="number" min="0" max="1000" step="1"
+        <input name="contributionPoints" type="number" min="1" max="1000" step="1"
                value="50" required>
       </label>
 
@@ -354,44 +361,6 @@
           Cancel
         </button>
         <button class="btn btn-primary" type="submit">Create Task</button>
-      </div>
-    </form>
-  </dialog>
-
-  <!-- Create team dialog -->
-  <dialog id="teamDialog">
-    <form id="teamForm">
-      <div class="dialog-header">
-        <div>
-          <p class="eyebrow">BUILD YOUR ORBIT</p>
-          <h2>Create a Team</h2>
-        </div>
-        <button class="dialog-close" type="button" data-close="teamDialog"
-                aria-label="Close">×</button>
-      </div>
-
-      <label>
-        Team name
-        <input name="name" required maxlength="60"
-               placeholder="e.g. Team Nova">
-      </label>
-
-      <label>
-        Team description
-        <textarea name="description" rows="3" required
-                  placeholder="What will your team work towards?"></textarea>
-      </label>
-
-      <label>
-        Team head
-        <select name="head" id="teamHead" required></select>
-      </label>
-
-      <div class="dialog-actions">
-        <button class="btn btn-outline" type="button" data-close="teamDialog">
-          Cancel
-        </button>
-        <button class="btn btn-primary" type="submit">Create Team</button>
       </div>
     </form>
   </dialog>

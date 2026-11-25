@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Announcements | Orbit</title>
+  <link rel="stylesheet" href="css/management.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <script src="js/navigation.js" defer></script>
+  <script src="js/announcements.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html"><span class="brand-mark">◎</span><span>Orbit</span></a>
+      <nav class="navigation" aria-label="Main navigation">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="team.html">Teams</a>
+        <a href="create-task.html">Create Task</a>
+        <a href="approvals.html">Approvals</a>
+        <a href="events.html">Events</a>
+        <a class="active" href="announcements.html" aria-current="page">Announcements</a>
+        <a href="workspace.html">Workspace</a>
+      </nav>
+      <div class="sidebar-footer"><a class="logout-link" href="landing.html">Log out</a></div>
+    </aside>
+    <main class="management-main">
+      <header class="management-header">
+        <div><p class="eyebrow">Workspace / Announcements</p><h1>Announcements</h1><p>Share important updates with your workspace.</p></div>
+        <label class="filter-field">Priority
+          <select id="priority-filter"><option value="">All priorities</option><option>Normal</option><option>Important</option><option>Urgent</option></select>
+        </label>
+      </header>
+      <p class="feedback" id="announcement-feedback" role="status" aria-live="polite"></p>
+      <div class="management-grid">
+        <section class="management-card" aria-labelledby="announcement-list-heading">
+          <div class="card-heading"><h2 id="announcement-list-heading">Latest updates</h2></div>
+          <ul class="announcement-list" id="announcement-list" aria-live="polite"><li class="empty-state">Loading announcements…</li></ul>
+          <div class="pagination-controls"><button class="button button-secondary" id="previous-page" type="button">Previous</button><span id="page-label">Page 1</span><button class="button button-secondary" id="next-page" type="button">Next</button></div>
+        </section>
+        <section class="management-card" id="announcement-form-card" aria-labelledby="announcement-form-heading">
+          <h2 id="announcement-form-heading">Create announcement</h2>
+          <form id="announcement-form">
+            <label>Title<input name="title" maxlength="160" required></label>
+            <label>Priority<select name="priority"><option>Normal</option><option>Important</option><option>Urgent</option></select></label>
+            <label>Message<textarea name="message" rows="8" maxlength="10000" required></textarea></label>
+            <div class="button-row"><button class="button button-primary" type="submit">Publish announcement</button><button class="button button-secondary" id="cancel-announcement-edit" type="button" hidden>Cancel edit</button></div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

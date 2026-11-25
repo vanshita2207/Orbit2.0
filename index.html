@@ -339,6 +339,21 @@
           <button class="submit-button" type="submit">Sign in</button>
         </form>
         <form id="signup-form" hidden>
+          <div class="field" id="workspace-mode-field" hidden>
+            <label for="workspace-mode">Workspace setup</label>
+            <select id="workspace-mode">
+              <option value="join">Join an existing workspace</option>
+              <option value="create">Create a new workspace</option>
+            </select>
+          </div>
+          <div class="field" id="workspace-name-field">
+            <label for="workspace-name">Workspace name</label>
+            <input id="workspace-name" name="workspaceName" type="text" autocomplete="organization" minlength="2" maxlength="100" placeholder="Your team or organisation">
+          </div>
+          <div class="field" id="invite-code-field">
+            <label for="invite-code">Workspace invitation code</label>
+            <input id="invite-code" name="inviteCode" type="text" autocomplete="off" maxlength="80" placeholder="Paste an invitation code">
+          </div>
           <div class="field">
             <label for="signup-name">Full name</label>
             <input id="signup-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="80" placeholder="Your name" required>

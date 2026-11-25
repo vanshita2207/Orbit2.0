@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace | Orbit</title>
+  <link rel="stylesheet" href="css/management.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <script src="js/navigation.js" defer></script>
+  <script src="js/workspace.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="dashboard.html"><span class="brand-mark">◎</span><span>Orbit</span></a>
+      <nav class="navigation" aria-label="Main navigation">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="team.html">Teams</a>
+        <a href="create-task.html">Create Task</a>
+        <a href="approvals.html">Approvals</a>
+        <a href="events.html">Events</a>
+        <a href="announcements.html">Announcements</a>
+        <a class="active" href="workspace.html" aria-current="page">Workspace</a>
+      </nav>
+      <div class="sidebar-footer"><a class="logout-link" href="landing.html">Log out</a></div>
+    </aside>
+    <main class="management-main">
+      <header class="management-header">
+        <div><p class="eyebrow">Workspace / Settings</p><h1>Workspace members</h1><p>Invite colleagues and see who belongs to this workspace.</p></div>
+      </header>
+      <p class="feedback" id="workspace-feedback" role="status" aria-live="polite"></p>
+      <section class="management-card workspace-card">
+        <p class="eyebrow">Current workspace</p>
+        <h2 id="workspace-name">Loading workspace…</h2>
+        <p>Share this invitation code with people who should join. Rotating it invalidates the previous code.</p>
+        <div class="invite-code-row"><code id="invite-code">••••••••</code><button class="button button-secondary" id="copy-invite" type="button">Copy</button><button class="button button-secondary" id="rotate-invite" type="button" hidden>Rotate code</button></div>
+        <p class="role-note" id="invite-note"></p>
+      </section>
+      <section class="management-card">
+        <div class="card-heading"><h2>Members</h2><span id="member-count"></span></div>
+        <ul class="record-list" id="member-list"><li class="empty-state">Loading members…</li></ul>
+      </section>
+      <section class="management-card team-management-card">
+        <div class="card-heading"><div><h2>Teams</h2><p>Create teams and manage their workspace members.</p></div><span id="team-count"></span></div>
+        <form id="team-form" class="team-form">
+          <label for="team-name">Team name
+            <input id="team-name" name="name" minlength="2" maxlength="100" required placeholder="e.g. Product">
+          </label>
+          <fieldset class="team-members-field">
+            <legend>Team members</legend>
+            <div id="team-member-options" class="team-member-options"></div>
+          </fieldset>
+          <div class="button-row">
+            <button class="button button-primary" id="save-team" type="submit">Create team</button>
+            <button class="button button-secondary" id="cancel-team-edit" type="button" hidden>Cancel edit</button>
+          </div>
+        </form>
+        <p class="role-note" id="team-permission-note"></p>
+        <ul class="record-list" id="team-list"><li class="empty-state">Loading teams…</li></ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

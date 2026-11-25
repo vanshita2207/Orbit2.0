@@ -11,6 +11,12 @@ const togglePasswordButton = document.querySelector("#toggle-password");
 const loginPassword = document.querySelector("#password");
 const signupPassword = document.querySelector("#signup-password");
 const signupConfirmPassword = document.querySelector("#signup-confirm-password");
+const workspaceNameField = document.querySelector("#workspace-name-field");
+const inviteCodeField = document.querySelector("#invite-code-field");
+const workspaceNameInput = document.querySelector("#workspace-name");
+const inviteCodeInput = document.querySelector("#invite-code");
+const workspaceModeField = document.querySelector("#workspace-mode-field");
+const workspaceModeInput = document.querySelector("#workspace-mode");
 const workspacePreview = document.querySelector("#workspace-preview");
 const workspaceVisual = document.querySelector("#workspace-visual");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -43,6 +49,8 @@ function showFeedback(message, isSuccess = false) {
   authFeedback.setAttribute("role", isSuccess ? "status" : "alert");
 }
 
+let workspaceExists = false;
+
 function setFormMode(mode) {
   const isSignup = mode === "signup";
   document.body.classList.toggle("auth-signup", isSignup);
@@ -51,7 +59,7 @@ function setFormMode(mode) {
   loginTitle.textContent = isSignup ? "Create your account" : "Welcome back";
   formKicker.textContent = isSignup ? "JOIN YOUR TEAM" : "TEAMFLOW ACCESS";
   loginIntro.textContent = isSignup
-    ? "Create an account to get started with your team."
+    ? "Create a workspace or join your team with an invitation code."
     : "Sign in to pick up where your team left off.";
   modeSwitch.replaceChildren();
 
@@ -65,6 +73,31 @@ function setFormMode(mode) {
   });
   modeSwitch.append(prompt, button);
   showFeedback("");
+  if (isSignup) updateWorkspaceSignupFields();
+}
+
+function updateWorkspaceSignupFields() {
+  const isJoining = workspaceExists && workspaceModeInput.value === "join";
+  workspaceModeField.hidden = !workspaceExists;
+  workspaceNameField.hidden = isJoining;
+  workspaceNameInput.required = !isJoining;
+  inviteCodeField.hidden = !isJoining;
+  inviteCodeInput.required = isJoining;
+  if (isJoining) workspaceNameInput.value = "";
+  else inviteCodeInput.value = "";
+}
+
+async function loadWorkspaceSignupFields() {
+  try {
+    const response = await fetch("/api/organizations/bootstrap-status", { credentials: "same-origin" });
+    const result = await readJsonResponse(response);
+    if (!response.ok) throw new Error(result.error || "Could not check workspace setup.");
+    workspaceExists = result.workspaceExists === true;
+    workspaceModeInput.value = workspaceExists ? "join" : "create";
+    updateWorkspaceSignupFields();
+  } catch (error) {
+    showFeedback(error instanceof Error ? error.message : "Could not check workspace setup.");
+  }
 }
 
 async function postJson(url, payload) {
@@ -107,6 +140,7 @@ async function submitForm(button, action) {
 }
 
 showSignupButton.addEventListener("click", () => setFormMode("signup"));
+workspaceModeInput.addEventListener("change", updateWorkspaceSignupFields);
 togglePasswordButton.addEventListener("click", () => {
   const isVisible = loginPassword.type === "text";
   loginPassword.type = isVisible ? "password" : "text";
@@ -163,6 +197,8 @@ signupForm.addEventListener("submit", (event) => {
       name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
+      workspaceName: formData.get("workspaceName"),
+      inviteCode: formData.get("inviteCode"),
     });
   });
 });
@@ -180,3 +216,5 @@ fetch("/api/auth/session", { credentials: "same-origin" })
   .catch((error) => {
     showFeedback(error instanceof Error ? error.message : "Could not connect to Orbit.");
   });
+
+void loadWorkspaceSignupFields();
